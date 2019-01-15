@@ -15,7 +15,6 @@ http.createServer((request, response) => { // вызов метода созда
             response.writeHead(200, {
                 'Content-Type': 'text/html'
             });
-            response.end(data);
             fs.readFile(filename2, 'utf8', (err, data) => {
                 if (err) {
                     console.log('Could not find or open file for reading\n');
@@ -26,7 +25,6 @@ http.createServer((request, response) => { // вызов метода созда
                     response.writeHead(200, {
                         'Content-Type': 'text/html'
                     });
-                    response.end(data);
                     fs.readFile(filename3, 'utf8', (err, data) => {
                         if (err) {
                             console.log('Could not find or open file for reading\n');
@@ -40,10 +38,10 @@ http.createServer((request, response) => { // вызов метода созда
                             response.end(data);
                         }
                     });
-                }
-            });
-        }
-    });
+                } 
+            }); 
+        } 
+    }); 
     console.log("Request accepted!");
 }).listen(8080, () => {
     console.log("HTTP server works in 8080 port!\n");
