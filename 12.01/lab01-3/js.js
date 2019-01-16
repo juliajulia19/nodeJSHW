@@ -1,48 +1,36 @@
-const http = require('http'); // подключение модуля http
-const fs = require('fs'); // подключение модуля для работы с файлом
-const filename = "header.html";
-const filename2 = "body.html";
-const filename3 = "footer.html";
+let http = require('http');
+let fs = require('fs');
 
-http.createServer((request, response) => { // вызов метода создания http сервера
-    fs.readFile(filename, 'utf8', (err, data) => {
-        if (err) {
-            console.log('Could not find or open file for reading\n');
-            response.statusCode = 404;
-            response.end();
-        } else {
-            console.log(`The file ${filename} is read and sent to the client\n`);
-            response.writeHead(200, {
-                'Content-Type': 'text/html'
-            });
-            fs.readFile(filename2, 'utf8', (err, data) => {
+http.createServer(response).listen(8080);
+
+function response(req, res) {
+    fs.readFile('header.html', 'utf8', (err, data1) => {
                 if (err) {
-                    console.log('Could not find or open file for reading\n');
-                    response.statusCode = 404;
-                    response.end();
+                    console.log('File error');
+                    res.statusCode = 404;
+                    res.end();
                 } else {
-                    console.log(`The file ${filename2} is read and sent to the client\n`);
-                    response.writeHead(200, {
-                        'Content-Type': 'text/html'
-                    });
-                    fs.readFile(filename3, 'utf8', (err, data) => {
+                    fs.readFile('body.html', 'utf8', (err, data2) => {
                         if (err) {
-                            console.log('Could not find or open file for reading\n');
-                            response.statusCode = 404;
-                            response.end();
+                            console.log('File error');
+                            res.statusCode = 404;
+                            res.end();
                         } else {
-                            console.log(`The file ${filename3} is read and sent to the client\n`);
-                            response.writeHead(200, {
-                                'Content-Type': 'text/html'
+                            fs.readFile('footer.html', 'utf8', (err, data3) => {
+                                if (err) {
+                                    console.log('File error');
+                                    res.statusCode = 404;
+                                    res.end();
+                                } else {
+                                    res.writeHead(200, {
+                                        'Content-Type': 'text/html'
+                                    });
+                                    res.write(data1 + data2 + data3);
+                                    res.end();
+                                }
                             });
-                            response.end(data);
                         }
                     });
-                } 
-            }); 
-        } 
-    }); 
-    console.log("Request accepted!");
-}).listen(8080, () => {
-    console.log("HTTP server works in 8080 port!\n");
-});
+                }
+    });
+}
